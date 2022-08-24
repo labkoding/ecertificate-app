@@ -1,13 +1,48 @@
+import React from 'react'
 import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, Text, View } from 'react-native'
-import AppBarComp from '../components/AppBarComp'
+import { StyleSheet, View } from 'react-native'
+import { TextInput, Button } from 'react-native-paper'
+import { useNavigation } from '@react-navigation/native'
 
 function LoginScreen ({ title }) {
+  const navigation = useNavigation()
+  const [secureTextEntry, setSecureTextEntry] = React.useState({
+    password: true
+  })
+  const toggleSecureTextEntry = (field) => {
+    setSecureTextEntry({ ...secureTextEntry, [field]: !secureTextEntry[field] })
+  }
   return (
     <>
-      <AppBarComp title={title} />
       <View style={styles.container}>
-        <Text>Login</Text>
+        <TextInput
+          style={{ marginTop: 15 }}
+          label='email'
+          mode='outlined'
+        />
+        <TextInput
+          style={{ marginTop: 15 }}
+          label='password'
+          mode='outlined'
+          right={<TextInput.Icon onPress={() => toggleSecureTextEntry('password')} icon='eye' />}
+          secureTextEntry={secureTextEntry.password}
+        />
+        <Button
+          style={{ marginTop: 15 }}
+          icon='send'
+          mode='contained'
+          onPress={null}
+        >
+          Login
+        </Button>
+        <Button
+          style={{ marginTop: 15 }}
+          icon='account-plus'
+          mode='text'
+          onPress={() => navigation.navigate('SignupScreen')}
+        >
+          Signup
+        </Button>
         <StatusBar style='auto' />
       </View>
     </>
