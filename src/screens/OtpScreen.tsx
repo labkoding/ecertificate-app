@@ -1,21 +1,34 @@
-import React from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, Text, View } from 'react-native'
+import { TextInput, Button } from 'react-native-paper'
 import AppBarComp from '../components/AppBarComp'
 
-function HomeScreen ({ title }) {
+function OtpScreen ({ title }) {
   return (
     <>
       <AppBarComp title={title} />
       <View style={styles.container}>
-        <Text>Home</Text>
+        <Text>Otp</Text>
+        <TextInput
+          style={{ marginTop: 15 }}
+          label='email'
+          mode='outlined'
+        />
+        <Button
+          style={{ marginTop: 15 }}
+          icon='send'
+          mode='contained'
+          onPress={null}
+        >
+          Validate
+        </Button>
         <StatusBar style='auto' />
       </View>
     </>
   )
 }
 
-export default HomeScreen
+export default OtpScreen
 
 const styles = StyleSheet.create({
   container: {
