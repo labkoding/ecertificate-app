@@ -8,6 +8,7 @@ import SignupScreen from './screens/SignupScreen'
 import OtpScreen from './screens/OtpScreen'
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen'
 import { isLoggedInAtom } from './GlobalAtom'
+import SetNewPasswordScreen from './screens/SetNewPasswordScreen'
 
 const Stack = createStackNavigator()
 
@@ -34,6 +35,7 @@ function App () {
             <Stack.Screen name='SignupScreen' component={props => <SignupScreen {...props} />} />
             <Stack.Screen name='OtpScreen' component={OtpScreen} />
             <Stack.Screen name='ForgotPasswordScreen' component={ForgotPasswordScreen} />
+            <Stack.Screen name='SetNewPasswordScreen' component={SetNewPasswordScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>
