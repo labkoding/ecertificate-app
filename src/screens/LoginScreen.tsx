@@ -1,24 +1,87 @@
 import React from 'react'
 import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, View } from 'react-native'
-import { TextInput, Button } from 'react-native-paper'
+import { useAtom } from 'jotai'
+import { StyleSheet, Text, View } from 'react-native'
+import { TextInput, Button, useTheme, HelperText } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
+import TextInputAvoidingView from '../components/TextInputAvoidingViewComp'
+import { isLoggedInAtom } from '../GlobalAtom'
 
 function LoginScreen ({ title }) {
+  const [, setIsLoggedIn] = useAtom(isLoggedInAtom)
   const navigation = useNavigation()
   const [secureTextEntry, setSecureTextEntry] = React.useState({
     password: true
   })
+  const [error, setError] = React.useState({
+    email: false,
+    password: false
+  })
+
+  // payload of the form
+  const [payload, setPayload] = React.useState({
+    email: '',
+    password: ''
+  })
+
+  const [, setErrorJsonString] = React.useState('')
+  const [, setPayloadJsonString] = React.useState('')
+
   const toggleSecureTextEntry = (field) => {
     setSecureTextEntry({ ...secureTextEntry, [field]: !secureTextEntry[field] })
   }
+
+  const handleChange = (field, value) => {
+    setPayload({ ...payload, [field]: value })
+    setPayloadJsonString(JSON.stringify(payload))
+  }
+  const handleSubmit = () => {
+    const { email, password } = payload
+    let isValid = true
+    if (!email || !email.includes('@')) {
+      error.email = true
+      setError(error)
+      setErrorJsonString(JSON.stringify(error))
+      isValid = false
+    }
+    if (!password || password.length <= 6) {
+      error.password = true
+      setError(error)
+      setErrorJsonString(JSON.stringify(error))
+      isValid = false
+    }
+    console.log('error===>', error)
+    console.log('payload===>', payload)
+    if (isValid) {
+      // navigation.navigate('HomeScreen')
+      error.email = false
+      error.password = false
+      setError(error)
+      setErrorJsonString(JSON.stringify(error))
+      setIsLoggedIn(true)
+      setPayload({ email: '', password: '' })
+      setPayloadJsonString(JSON.stringify(payload))
+    }
+  }
+
+  const {
+    colors: { background }
+  } = useTheme()
   return (
-    <>
-      <View style={styles.container}>
+    <TextInputAvoidingView>
+      {/* <ScrollView
+        style={[styles.container, { backgroundColor: background }]}
+        keyboardShouldPersistTaps={'always'}
+        removeClippedSubviews={false}
+      > */}
+      <View style={[styles.container, { backgroundColor: background }]}>
+        <Text style={{ marginTop: 100 }}>Login</Text>
         <TextInput
           style={{ marginTop: 15 }}
           label='email'
           mode='outlined'
+          onChangeText={(text) => handleChange('email', text)}
+          value={payload.email}
         />
         <TextInput
           style={{ marginTop: 15 }}
@@ -26,12 +89,17 @@ function LoginScreen ({ title }) {
           mode='outlined'
           right={<TextInput.Icon onPress={() => toggleSecureTextEntry('password')} icon='eye' />}
           secureTextEntry={secureTextEntry.password}
+          onChangeText={(text) => handleChange('password', text)}
+          value={payload.password}
         />
+        <HelperText type='error' visible={error.password || error.email}>
+          Invalid email or password
+        </HelperText>
         <Button
           style={{ marginTop: 15 }}
           icon='send'
           mode='contained'
-          onPress={null}
+          onPress={handleSubmit}
         >
           Login
         </Button>
@@ -43,9 +111,18 @@ function LoginScreen ({ title }) {
         >
           Signup
         </Button>
+        <Button
+          style={{ marginTop: 15 }}
+          icon='lock-question'
+          mode='text'
+          onPress={() => navigation.navigate('ForgotPasswordScreen')}
+        >
+          Forgot Password
+        </Button>
         <StatusBar style='auto' />
       </View>
-    </>
+      {/* </ScrollView> */}
+    </TextInputAvoidingView>
   )
 }
 
@@ -54,7 +131,6 @@ export default LoginScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center'
   }

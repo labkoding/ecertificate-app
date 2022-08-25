@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { BottomNavigation, Text } from 'react-native-paper'
+import { BottomNavigation } from 'react-native-paper'
 import HomeScreen from '../screens/HomeScreen'
-import MyCertificateScreen from '../screens/MyCertificateScreen';
-import MyProfileScreen from '../screens/MyProfileScreen';
+import MyCertificateScreen from '../screens/MyCertificateScreen'
+import MyProfileScreen from '../screens/MyProfileScreen'
 
 const BottomNavigationComp = () => {
   const [index, setIndex] = React.useState(0)
@@ -25,6 +25,6 @@ const BottomNavigationComp = () => {
       renderScene={renderScene}
     />
   )
-};
+}
 
 export default BottomNavigationComp

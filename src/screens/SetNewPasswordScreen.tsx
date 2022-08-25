@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native'
 import { isLoggedInAtom } from '../GlobalAtom'
 import TextInputAvoidingView from '../components/TextInputAvoidingViewComp'
 
-function SignupScreen ({ title }) {
+function SetNewPasswordScreen ({ title }) {
   const [, setIsLoggedIn] = useAtom(isLoggedInAtom)
   const navigation = useNavigation()
   const [secureTextEntry, setSecureTextEntry] = React.useState({
@@ -19,14 +19,12 @@ function SignupScreen ({ title }) {
   }
   // toggle for input text wheter error or not error
   const [error, setError] = React.useState({
-    email: false,
     password: false,
     confirmPassword: false
   })
 
   // payload of the form
   const [payload, setPayload] = React.useState({
-    email: '',
     password: '',
     confirmPassword: ''
   })
@@ -35,24 +33,21 @@ function SignupScreen ({ title }) {
   const [, setPayloadJsonString] = React.useState('')
 
   const handleChange = (field, value) => {
-    if (field === 'email') error.email = !value.includes('@')
     if (field === 'password') error.password = value.length <= 6
     if (field === 'confirmPassword') error.confirmPassword = value !== payload.password
     setPayload({ ...payload, [field]: value })
     setPayloadJsonString(JSON.stringify(payload))
   }
   const handleSubmit = () => {
-    // validate email
-    if (payload.email === '') error.email = true
     if (payload.password === '') error.password = true
     if (payload.confirmPassword === '') error.confirmPassword = true
     setError(error)
     setErrorJsonString(JSON.stringify(error))
     console.log('error===>', error)
-    if (error.email || error.password || error.confirmPassword) {
+    if (error.password || error.confirmPassword) {
       return false
     }
-    setIsLoggedIn(true)
+    navigation.navigate('LoginScreen')
   }
   const {
     colors: { background }
@@ -60,18 +55,7 @@ function SignupScreen ({ title }) {
   return (
     <TextInputAvoidingView>
       <View style={[styles.container, { backgroundColor: background }]}>
-        <Text>Signup</Text>
-        <TextInput
-          style={{ marginTop: 15 }}
-          label='email'
-          mode='outlined'
-          error={error.email}
-          onChangeText={(text) => handleChange('email', text)}
-          value={payload.email}
-        />
-        <HelperText type='error' visible={error.email}>
-          Email address is invalid!
-        </HelperText>
+        <Text>Set New Password</Text>
         <TextInput
           style={{ marginTop: 15 }}
           label='new password'
@@ -104,7 +88,7 @@ function SignupScreen ({ title }) {
           mode='contained'
           onPress={handleSubmit}
         >
-          Signup
+          Submit
         </Button>
         <Button
           style={{ marginTop: 15 }}
@@ -120,7 +104,7 @@ function SignupScreen ({ title }) {
   )
 }
 
-export default SignupScreen
+export default SetNewPasswordScreen
 
 const styles = StyleSheet.create({
   container: {
