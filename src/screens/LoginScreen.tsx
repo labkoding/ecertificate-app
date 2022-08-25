@@ -5,12 +5,13 @@ import { StyleSheet, Text, View } from 'react-native'
 import { TextInput, Button, useTheme, HelperText } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import TextInputAvoidingView from '../components/TextInputAvoidingViewComp'
-import { loginIdAtom } from '../GlobalAtom'
+import { loginIdAtom, userProfileAtom } from '../GlobalAtom'
 
 const API_URL = 'http://localhost:8080/v1/users/login'
 
 function LoginScreen ({ title }) {
   const [, setLoginIdAtom] = useAtom(loginIdAtom)
+  const [, setUserProfile] = useAtom(userProfileAtom)
   const navigation = useNavigation()
   const [secureTextEntry, setSecureTextEntry] = React.useState({
     password: true
@@ -42,6 +43,7 @@ function LoginScreen ({ title }) {
       setPayload({ email: '', password: '' })
       setPayloadJsonString(JSON.stringify(payload))
       setLoginIdAtom(data.loginId)
+      setUserProfile(data.userProfile)
     } else {
       setError({ ...error, email: 'Invalid email or password' })
       setErrorJsonString(JSON.stringify(error))

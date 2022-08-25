@@ -32,7 +32,7 @@ function OtpScreen ({ title, route: { params: { action, otpRef } } }) {
       if (action === 'signup') {
         navigation.navigate('LoginScreen')
       } else if (action === 'forgotpassword') {
-        navigation.navigate('SetNewPasswordScreen')
+        navigation.navigate('SetNewPasswordScreen', { userId: data.entityId })
       } else {
         navigation.navigate('LoginScreen')
       }

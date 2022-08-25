@@ -5,7 +5,9 @@ import { TextInput, Button, HelperText, useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import TextInputAvoidingView from '../components/TextInputAvoidingViewComp'
 
-function SetNewPasswordScreen ({ title }) {
+const API_URL = 'http://localhost:8080/v1/users/set-new-password'
+
+function SetNewPasswordScreen ({ title, route: { params: { userId } } }) {
   const navigation = useNavigation()
   const [secureTextEntry, setSecureTextEntry] = React.useState({
     newPassword: true,
@@ -22,6 +24,7 @@ function SetNewPasswordScreen ({ title }) {
 
   // payload of the form
   const [payload, setPayload] = React.useState({
+    userId: userId,
     password: '',
     confirmPassword: ''
   })
@@ -35,16 +38,38 @@ function SetNewPasswordScreen ({ title }) {
     setPayload({ ...payload, [field]: value })
     setPayloadJsonString(JSON.stringify(payload))
   }
-  const handleSubmit = () => {
+  const fetchResults = (data) => {
+    if (data.status === 'ok') {
+      navigation.navigate('LoginScreen')
+    } else {
+      const errorMessage = data.message
+      setError({ ...error, confirmPassword: errorMessage })
+      setErrorJsonString(JSON.stringify(error))
+    }
+  }
+  const handleSubmit = async () => {
     if (payload.password === '') error.password = 'Password is required'
     if (payload.confirmPassword === '') error.confirmPassword = 'Confirm Password is required'
     setError(error)
     setErrorJsonString(JSON.stringify(error))
     console.log('error===>', error)
-    if (error.password || error.confirmPassword) {
+    if (error.password !== '' || error.confirmPassword !== '') {
       return false
     }
-    navigation.navigate('LoginScreen')
+    const data = {
+      method: 'POST',
+      // credentials: 'same-origin',
+      // mode: 'same-origin',
+      body: JSON.stringify(payload),
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+        // 'X-CSRFToken':  cookie.load('csrftoken')
+      }
+    }
+    const response = await fetch(API_URL, data)
+    fetchResults(await response.json())
   }
   const {
     colors: { background }
