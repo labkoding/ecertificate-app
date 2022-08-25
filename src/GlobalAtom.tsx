@@ -1,3 +1,3 @@
 import { atomWithStorage } from 'jotai/utils'
 
-export const isLoggedInAtom = atomWithStorage('isLoggedIn', false)
+export const loginIdAtom = atomWithStorage('loginId', '')
