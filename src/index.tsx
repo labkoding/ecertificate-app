@@ -7,7 +7,7 @@ import LoginScreen from './screens/LoginScreen'
 import SignupScreen from './screens/SignupScreen'
 import OtpScreen from './screens/OtpScreen'
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen'
-import { isLoggedInAtom } from './GlobalAtom'
+import { loginIdAtom } from './GlobalAtom'
 import SetNewPasswordScreen from './screens/SetNewPasswordScreen'
 
 const Stack = createStackNavigator()
@@ -25,8 +25,8 @@ const theme = {
 }
 
 function App () {
-  const [isLoggedIn] = useAtom(isLoggedInAtom)
-  if (!isLoggedIn) {
+  const [loginId] = useAtom(loginIdAtom)
+  if (loginId === '') {
     return (
       <PaperProvider theme={theme}>
         <NavigationContainer>

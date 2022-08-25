@@ -1,14 +1,11 @@
 import React from 'react'
-import { useAtom } from 'jotai'
 import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, View, Text } from 'react-native'
 import { TextInput, Button, HelperText, useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
-import { isLoggedInAtom } from '../GlobalAtom'
 import TextInputAvoidingView from '../components/TextInputAvoidingViewComp'
 
 function SetNewPasswordScreen ({ title }) {
-  const [, setIsLoggedIn] = useAtom(isLoggedInAtom)
   const navigation = useNavigation()
   const [secureTextEntry, setSecureTextEntry] = React.useState({
     newPassword: true,
@@ -19,8 +16,8 @@ function SetNewPasswordScreen ({ title }) {
   }
   // toggle for input text wheter error or not error
   const [error, setError] = React.useState({
-    password: false,
-    confirmPassword: false
+    password: '',
+    confirmPassword: ''
   })
 
   // payload of the form
@@ -33,14 +30,14 @@ function SetNewPasswordScreen ({ title }) {
   const [, setPayloadJsonString] = React.useState('')
 
   const handleChange = (field, value) => {
-    if (field === 'password') error.password = value.length <= 6
-    if (field === 'confirmPassword') error.confirmPassword = value !== payload.password
+    if (field === 'password') error.password = value.length <= 6 ? 'Password must be at least 6 characters' : ''
+    if (field === 'confirmPassword') error.confirmPassword = value !== payload.password ? 'Passwords do not match' : ''
     setPayload({ ...payload, [field]: value })
     setPayloadJsonString(JSON.stringify(payload))
   }
   const handleSubmit = () => {
-    if (payload.password === '') error.password = true
-    if (payload.confirmPassword === '') error.confirmPassword = true
+    if (payload.password === '') error.password = 'Password is required'
+    if (payload.confirmPassword === '') error.confirmPassword = 'Confirm Password is required'
     setError(error)
     setErrorJsonString(JSON.stringify(error))
     console.log('error===>', error)
@@ -62,12 +59,12 @@ function SetNewPasswordScreen ({ title }) {
           mode='outlined'
           right={<TextInput.Icon onPress={() => toggleSecureTextEntry('newPassword')} icon='eye' />}
           secureTextEntry={secureTextEntry.newPassword}
-          error={error.password}
+          error={error.password !== ''}
           onChangeText={(text) => handleChange('password', text)}
           value={payload.password}
         />
-        <HelperText type='error' visible={error.password}>
-          Password must be at least 6 characters!
+        <HelperText type='error' visible={error.password !== ''}>
+          {error.password}
         </HelperText>
         <TextInput
           style={{ marginTop: 15 }}
@@ -75,12 +72,12 @@ function SetNewPasswordScreen ({ title }) {
           mode='outlined'
           right={<TextInput.Icon onPress={() => toggleSecureTextEntry('confirmPassword')} icon='eye' />}
           secureTextEntry={secureTextEntry.confirmPassword}
-          error={error.confirmPassword}
+          error={error.confirmPassword !== ''}
           onChangeText={(text) => handleChange('confirmPassword', text)}
           value={payload.confirmPassword}
         />
-        <HelperText type='error' visible={error.confirmPassword}>
-          Password does not match!
+        <HelperText type='error' visible={error.confirmPassword !== ''}>
+          {error.confirmPassword}
         </HelperText>
         <Button
           style={{ marginTop: 15 }}

@@ -1,14 +1,13 @@
 import React from 'react'
-import { useAtom } from 'jotai'
 import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, View, Text } from 'react-native'
 import { TextInput, Button, HelperText, useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
-import { isLoggedInAtom } from '../GlobalAtom'
 import TextInputAvoidingView from '../components/TextInputAvoidingViewComp'
 
+const API_URL = 'http://localhost:8080/v1/users/signup'
+
 function SignupScreen ({ title }) {
-  const [, setIsLoggedIn] = useAtom(isLoggedInAtom)
   const navigation = useNavigation()
   const [secureTextEntry, setSecureTextEntry] = React.useState({
     newPassword: true,
@@ -19,13 +18,15 @@ function SignupScreen ({ title }) {
   }
   // toggle for input text wheter error or not error
   const [error, setError] = React.useState({
-    email: false,
-    password: false,
-    confirmPassword: false
+    fullname: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
   })
 
   // payload of the form
   const [payload, setPayload] = React.useState({
+    fullname: '',
     email: '',
     password: '',
     confirmPassword: ''
@@ -35,24 +36,50 @@ function SignupScreen ({ title }) {
   const [, setPayloadJsonString] = React.useState('')
 
   const handleChange = (field, value) => {
-    if (field === 'email') error.email = !value.includes('@')
-    if (field === 'password') error.password = value.length <= 6
-    if (field === 'confirmPassword') error.confirmPassword = value !== payload.password
+    if (field === 'fullname') error.fullname = value.length <= 4 ? 'Fullname must be at least 4 characters' : ''
+    if (field === 'email') error.email = !value.includes('@') ? 'Email must be valid' : ''
+    if (field === 'password') error.password = value.length <= 6 ? 'Password must be at least 6 characters' : ''
+    if (field === 'confirmPassword') error.confirmPassword = value !== payload.password ? 'Password must match' : ''
     setPayload({ ...payload, [field]: value })
     setPayloadJsonString(JSON.stringify(payload))
   }
-  const handleSubmit = () => {
+  const fetchResults = (data) => {
+    console.log('data===>', data)
+    if (data.status === 'ok') {
+      navigation.navigate('OtpScreen', { action: 'signup', otpRef: data.otpRef })
+    } else {
+      console.log('error = ', data.message.message)
+      let errorMessage = data.message
+      if (((data.message || {}).message + '').includes('tb_user.email_UNIQUE')) errorMessage = 'Email already exists'
+      setError({ ...error, email: errorMessage })
+      setErrorJsonString(JSON.stringify(error))
+    }
+  }
+  const handleSubmit = async () => {
     // validate email
-    if (payload.email === '') error.email = true
-    if (payload.password === '') error.password = true
-    if (payload.confirmPassword === '') error.confirmPassword = true
+    if (payload.fullname === '') error.fullname = 'Fullname is required'
+    if (payload.email === '') error.email = 'Fullname must be at least 4 characters'
+    if (payload.password === '') error.password = 'Password must be at least 6 characters'
+    if (payload.confirmPassword === '') error.confirmPassword = 'Password must match'
     setError(error)
     setErrorJsonString(JSON.stringify(error))
-    console.log('error===>', error)
-    if (error.email || error.password || error.confirmPassword) {
+    if (error.email !== '' || error.password !== '' || error.confirmPassword !== '' || error.fullname !== '') {
       return false
     }
-    setIsLoggedIn(true)
+    const data = {
+      method: 'POST',
+      // credentials: 'same-origin',
+      // mode: 'same-origin',
+      body: JSON.stringify(payload),
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+        // 'X-CSRFToken':  cookie.load('csrftoken')
+      }
+    }
+    const response = await fetch(API_URL, data)
+    fetchResults(await response.json())
   }
   const {
     colors: { background }
@@ -63,14 +90,25 @@ function SignupScreen ({ title }) {
         <Text>Signup</Text>
         <TextInput
           style={{ marginTop: 15 }}
+          label='name'
+          mode='outlined'
+          error={error.fullname !== ''}
+          onChangeText={(text) => handleChange('fullname', text)}
+          value={payload.fullname}
+        />
+        <HelperText type='error' visible={error.fullname !== ''}>
+          {error.fullname}
+        </HelperText>
+        <TextInput
+          style={{ marginTop: 15 }}
           label='email'
           mode='outlined'
-          error={error.email}
+          error={error.email !== ''}
           onChangeText={(text) => handleChange('email', text)}
           value={payload.email}
         />
-        <HelperText type='error' visible={error.email}>
-          Email address is invalid!
+        <HelperText type='error' visible={error.email !== ''}>
+          {error.email}
         </HelperText>
         <TextInput
           style={{ marginTop: 15 }}
@@ -78,12 +116,12 @@ function SignupScreen ({ title }) {
           mode='outlined'
           right={<TextInput.Icon onPress={() => toggleSecureTextEntry('newPassword')} icon='eye' />}
           secureTextEntry={secureTextEntry.newPassword}
-          error={error.password}
+          error={error.password !== ''}
           onChangeText={(text) => handleChange('password', text)}
           value={payload.password}
         />
-        <HelperText type='error' visible={error.password}>
-          Password must be at least 6 characters!
+        <HelperText type='error' visible={error.password !== ''}>
+          {error.password}
         </HelperText>
         <TextInput
           style={{ marginTop: 15 }}
@@ -91,12 +129,12 @@ function SignupScreen ({ title }) {
           mode='outlined'
           right={<TextInput.Icon onPress={() => toggleSecureTextEntry('confirmPassword')} icon='eye' />}
           secureTextEntry={secureTextEntry.confirmPassword}
-          error={error.confirmPassword}
+          error={error.confirmPassword !== ''}
           onChangeText={(text) => handleChange('confirmPassword', text)}
           value={payload.confirmPassword}
         />
-        <HelperText type='error' visible={error.confirmPassword}>
-          Password does not match!
+        <HelperText type='error' visible={error.confirmPassword !== ''}>
+          {error.confirmPassword}
         </HelperText>
         <Button
           style={{ marginTop: 15 }}

@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { useAtom } from 'jotai'
 import { Button, Paragraph, Dialog, Portal } from 'react-native-paper'
-import { isLoggedInAtom } from '../GlobalAtom'
+import { loginIdAtom } from '../GlobalAtom'
 
 const LogoutConfirmationComp = ({ visible, hideDialog }) => {
-  const [, setIsLoggedIn] = useAtom(isLoggedInAtom)
+  const [, setLoginId] = useAtom(loginIdAtom)
   return (
     <Portal>
       <Dialog
@@ -20,7 +20,7 @@ const LogoutConfirmationComp = ({ visible, hideDialog }) => {
         <Dialog.Actions>
           <Button
             onPress={() => {
-              setIsLoggedIn(false)
+              setLoginId('')
               hideDialog()
             }}
           >

@@ -5,17 +5,19 @@ import { StyleSheet, Text, View } from 'react-native'
 import { TextInput, Button, useTheme, HelperText } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import TextInputAvoidingView from '../components/TextInputAvoidingViewComp'
-import { isLoggedInAtom } from '../GlobalAtom'
+import { loginIdAtom } from '../GlobalAtom'
+
+const API_URL = 'http://localhost:8080/v1/users/login'
 
 function LoginScreen ({ title }) {
-  const [, setIsLoggedIn] = useAtom(isLoggedInAtom)
+  const [, setLoginIdAtom] = useAtom(loginIdAtom)
   const navigation = useNavigation()
   const [secureTextEntry, setSecureTextEntry] = React.useState({
     password: true
   })
   const [error, setError] = React.useState({
-    email: false,
-    password: false
+    email: '',
+    password: ''
   })
 
   // payload of the form
@@ -35,17 +37,27 @@ function LoginScreen ({ title }) {
     setPayload({ ...payload, [field]: value })
     setPayloadJsonString(JSON.stringify(payload))
   }
-  const handleSubmit = () => {
+  const fetchResults = (data) => {
+    if (data.status === 'ok') {
+      setPayload({ email: '', password: '' })
+      setPayloadJsonString(JSON.stringify(payload))
+      setLoginIdAtom(data.loginId)
+    } else {
+      setError({ ...error, email: 'Invalid email or password' })
+      setErrorJsonString(JSON.stringify(error))
+    }
+  }
+  const handleSubmit = async () => {
     const { email, password } = payload
     let isValid = true
     if (!email || !email.includes('@')) {
-      error.email = true
+      error.email = 'Invalid email or password'
       setError(error)
       setErrorJsonString(JSON.stringify(error))
       isValid = false
     }
     if (!password || password.length <= 6) {
-      error.password = true
+      error.password = 'Invalid email or password'
       setError(error)
       setErrorJsonString(JSON.stringify(error))
       isValid = false
@@ -54,13 +66,24 @@ function LoginScreen ({ title }) {
     console.log('payload===>', payload)
     if (isValid) {
       // navigation.navigate('HomeScreen')
-      error.email = false
-      error.password = false
+      error.email = ''
+      error.password = ''
       setError(error)
       setErrorJsonString(JSON.stringify(error))
-      setIsLoggedIn(true)
-      setPayload({ email: '', password: '' })
-      setPayloadJsonString(JSON.stringify(payload))
+      const data = {
+        method: 'POST',
+        // credentials: 'same-origin',
+        // mode: 'same-origin',
+        body: JSON.stringify(payload),
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+          // 'X-CSRFToken':  cookie.load('csrftoken')
+        }
+      }
+      const response = await fetch(API_URL, data)
+      fetchResults(await response.json())
     }
   }
 
@@ -92,7 +115,7 @@ function LoginScreen ({ title }) {
           onChangeText={(text) => handleChange('password', text)}
           value={payload.password}
         />
-        <HelperText type='error' visible={error.password || error.email}>
+        <HelperText type='error' visible={error.password !== '' || error.email !== ''}>
           Invalid email or password
         </HelperText>
         <Button
