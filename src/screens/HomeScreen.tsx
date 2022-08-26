@@ -26,14 +26,14 @@ function HomeScreen ({ title }) {
           <Card.Cover source={require('../assets/images/semintar1.jpeg')} />
           <Card.Actions>
             <Button onPress={() => {}}>Share</Button>
-            <Button onPress={() => {}}>Explore</Button>
+            <Button onPress={() => {}}>Enroll</Button>
           </Card.Actions>
         </Card>
         <Card style={styles.card}>
           <Card.Cover source={require('../assets/images/semintar1.jpeg')} />
           <Card.Actions>
             <Button onPress={() => {}}>Share</Button>
-            <Button onPress={() => {}}>Explore</Button>
+            <Button onPress={() => {}}>Enroll</Button>
           </Card.Actions>
         </Card>
         <StatusBar style='auto' />

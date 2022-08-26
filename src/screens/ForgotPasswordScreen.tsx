@@ -5,7 +5,7 @@ import { TextInput, Button, useTheme, HelperText } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import TextInputAvoidingView from '../components/TextInputAvoidingViewComp'
 
-const API_URL = 'http://localhost:8080/v1/users/forgotpassword'
+const API_URL = 'https://ecertificate-api.labkoding.co.id/v1/users/forgotpassword'
 
 function ForgotPasswordScreen ({ title }) {
   const navigation = useNavigation()

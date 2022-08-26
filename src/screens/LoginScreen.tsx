@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native'
 import TextInputAvoidingView from '../components/TextInputAvoidingViewComp'
 import { loginIdAtom, userProfileAtom } from '../GlobalAtom'
 
-const API_URL = 'http://localhost:8080/v1/users/login'
+const API_URL = 'https://ecertificate-api.labkoding.co.id/v1/users/login'
 
 function LoginScreen ({ title }) {
   const [, setLoginIdAtom] = useAtom(loginIdAtom)

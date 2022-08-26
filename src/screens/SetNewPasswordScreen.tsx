@@ -5,7 +5,7 @@ import { TextInput, Button, HelperText, useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
 import TextInputAvoidingView from '../components/TextInputAvoidingViewComp'
 
-const API_URL = 'http://localhost:8080/v1/users/set-new-password'
+const API_URL = 'https://ecertificate-api.labkoding.co.id/v1/users/set-new-password'
 
 function SetNewPasswordScreen ({ title, route: { params: { userId } } }) {
   const navigation = useNavigation()
