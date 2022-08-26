@@ -1,15 +1,19 @@
 import React from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { useAtom } from 'jotai'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, ScrollView } from 'react-native'
 import { TextInput, Button, useTheme, HelperText } from 'react-native-paper'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
+// import AsyncStorage from '@react-native-async-storage/async-storage'
 import TextInputAvoidingView from '../components/TextInputAvoidingViewComp'
 import { loginIdAtom, userProfileAtom } from '../GlobalAtom'
+import AppConfig from '../config/AppConfig'
 
-const API_URL = 'https://ecertificate-api.labkoding.co.id/v1/users/login'
+const API_URL = AppConfig.baseUrlApi + '/users/login'
 
 function LoginScreen ({ title }) {
+  const insets = useSafeAreaInsets()
   const [, setLoginIdAtom] = useAtom(loginIdAtom)
   const [, setUserProfile] = useAtom(userProfileAtom)
   const navigation = useNavigation()
@@ -39,11 +43,14 @@ function LoginScreen ({ title }) {
     setPayloadJsonString(JSON.stringify(payload))
   }
   const fetchResults = (data) => {
+    console.log('data===>', data)
     if (data.status === 'ok') {
       setPayload({ email: '', password: '' })
       setPayloadJsonString(JSON.stringify(payload))
       setLoginIdAtom(data.loginId)
       setUserProfile(data.userProfile)
+      // AsyncStorage.setItem('loginId', data.loginId)
+      // AsyncStorage.setItem('userProfile', JSON.stringify(data.userProfile))
     } else {
       setError({ ...error, email: 'Invalid email or password' })
       setErrorJsonString(JSON.stringify(error))
@@ -94,12 +101,12 @@ function LoginScreen ({ title }) {
   } = useTheme()
   return (
     <TextInputAvoidingView>
-      {/* <ScrollView
-        style={[styles.container, { backgroundColor: background }]}
+      <ScrollView
+        style={[styles.container, { backgroundColor: background, marginTop: insets.top }]}
         keyboardShouldPersistTaps={'always'}
         removeClippedSubviews={false}
-      > */}
-      <View style={[styles.container, { backgroundColor: background }]}>
+      >
+        {/* <View style={[styles.container, { backgroundColor: background }]}> */}
         <Text style={{ marginTop: 100 }}>Login</Text>
         <TextInput
           style={{ marginTop: 15 }}
@@ -145,8 +152,8 @@ function LoginScreen ({ title }) {
           Forgot Password
         </Button>
         <StatusBar style='auto' />
-      </View>
-      {/* </ScrollView> */}
+        {/* </View> */}
+      </ScrollView>
     </TextInputAvoidingView>
   )
 }
@@ -156,7 +163,8 @@ export default LoginScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    padding: 8
+    // alignItems: 'center',
+    // justifyContent: 'center'
   }
 })

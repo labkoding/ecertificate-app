@@ -1,7 +1,7 @@
 import { useAtom } from 'jotai'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import { MD3LightTheme as DefaultTheme, Provider as PaperProvider, DarkTheme } from 'react-native-paper'
+import { MD3LightTheme as DefaultTheme, Provider as PaperProvider } from 'react-native-paper'
 import BottomNavigationComp from './components/BottomNavigationComp'
 import LoginScreen from './screens/LoginScreen'
 import SignupScreen from './screens/SignupScreen'
@@ -26,11 +26,12 @@ const theme = {
 
 function App () {
   const [loginId] = useAtom(loginIdAtom)
+  console.log('App invoked with loginId:', loginId)
   if (loginId === '') {
     return (
       <PaperProvider theme={theme}>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName='LoginScreen' headerMode='none'>
+          <Stack.Navigator initialRouteName='LoginScreen' screenOptions={{ headerShown: false }}>
             <Stack.Screen name='LoginScreen' component={LoginScreen} />
             <Stack.Screen name='SignupScreen' component={props => <SignupScreen {...props} />} />
             <Stack.Screen name='OtpScreen' component={OtpScreen} />

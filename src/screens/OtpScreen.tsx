@@ -1,13 +1,16 @@
 import React from 'react'
 import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, ScrollView } from 'react-native'
 import { TextInput, Button, useTheme, HelperText } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import TextInputAvoidingView from '../components/TextInputAvoidingViewComp'
+import AppConfig from '../config/AppConfig'
 
-const API_URL = 'https://ecertificate-api.labkoding.co.id/v1/otp'
+const API_URL = AppConfig.baseUrlApi + '/otp'
 
 function OtpScreen ({ title, route: { params: { action, otpRef } } }) {
+  const insets = useSafeAreaInsets()
   console.log('action===>', action)
   const navigation = useNavigation()
   const [error, setError] = React.useState({
@@ -77,8 +80,12 @@ function OtpScreen ({ title, route: { params: { action, otpRef } } }) {
   } = useTheme()
   return (
     <TextInputAvoidingView>
-      <View style={[styles.container, { backgroundColor: background }]}>
-        <Text>The otp has send to your email</Text>
+      <ScrollView
+        style={[styles.container, { backgroundColor: background, marginTop: insets.top }]}
+        keyboardShouldPersistTaps={'always'}
+        removeClippedSubviews={false}
+      >
+        <Text style={{ marginTop: 100 }}>The otp has send to your email</Text>
         <TextInput
           style={{ marginTop: 15 }}
           label='Otp'
@@ -107,7 +114,7 @@ function OtpScreen ({ title, route: { params: { action, otpRef } } }) {
           Login
         </Button>
         <StatusBar style='auto' />
-      </View>
+      </ScrollView>
     </TextInputAvoidingView>
   )
 }
@@ -117,8 +124,6 @@ export default OtpScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
+    padding: 8
   }
 })

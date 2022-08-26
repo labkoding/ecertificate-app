@@ -3,7 +3,7 @@ import { useAtom } from 'jotai'
 import { Button, Paragraph, Dialog, Portal } from 'react-native-paper'
 import { loginIdAtom } from '../GlobalAtom'
 
-const LogoutConfirmationComp = ({ visible, hideDialog }) => {
+const DialogLogoutConfirmationComp = ({ visible, hideDialog }) => {
   const [, setLoginId] = useAtom(loginIdAtom)
   return (
     <Portal>
@@ -32,4 +32,4 @@ const LogoutConfirmationComp = ({ visible, hideDialog }) => {
   )
 }
 
-export default LogoutConfirmationComp
+export default DialogLogoutConfirmationComp

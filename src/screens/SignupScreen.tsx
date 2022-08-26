@@ -1,13 +1,16 @@
 import React from 'react'
 import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, ScrollView, Text } from 'react-native'
 import { TextInput, Button, HelperText, useTheme } from 'react-native-paper'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
 import TextInputAvoidingView from '../components/TextInputAvoidingViewComp'
+import AppConfig from '../config/AppConfig'
 
-const API_URL = 'https://ecertificate-api.labkoding.co.id/v1/users/signup'
+const API_URL = AppConfig.baseUrlApi + '/users/signup'
 
 function SignupScreen ({ title }) {
+  const insets = useSafeAreaInsets()
   const navigation = useNavigation()
   const [secureTextEntry, setSecureTextEntry] = React.useState({
     newPassword: true,
@@ -86,8 +89,12 @@ function SignupScreen ({ title }) {
   } = useTheme()
   return (
     <TextInputAvoidingView>
-      <View style={[styles.container, { backgroundColor: background }]}>
-        <Text>Signup</Text>
+      <ScrollView
+        style={[styles.container, { backgroundColor: background, marginTop: insets.top }]}
+        keyboardShouldPersistTaps={'always'}
+        removeClippedSubviews={false}
+      >
+        <Text style={{ marginTop: 100 }}>Signup</Text>
         <TextInput
           style={{ marginTop: 15 }}
           label='name'
@@ -153,7 +160,7 @@ function SignupScreen ({ title }) {
           Login
         </Button>
         <StatusBar style='auto' />
-      </View>
+      </ScrollView>
     </TextInputAvoidingView>
   )
 }
@@ -163,7 +170,28 @@ export default SignupScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-})
+    padding: 8,
+  },
+  helpersWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  wrapper: {
+    flex: 1,
+  },
+  helper: {
+    flexShrink: 1,
+  },
+  counterHelper: {
+    textAlign: 'right',
+  },
+  inputContainerStyle: {
+    margin: 8,
+  },
+  fontSize: {
+    fontSize: 24,
+  },
+  textArea: {
+    height: 80,
+  },
+});

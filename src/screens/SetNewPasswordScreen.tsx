@@ -1,13 +1,16 @@
 import React from 'react'
 import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, ScrollView, Text } from 'react-native'
 import { TextInput, Button, HelperText, useTheme } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import TextInputAvoidingView from '../components/TextInputAvoidingViewComp'
+import AppConfig from '../config/AppConfig'
 
-const API_URL = 'https://ecertificate-api.labkoding.co.id/v1/users/set-new-password'
+const API_URL = AppConfig.baseUrlApi + '/users/set-new-password'
 
 function SetNewPasswordScreen ({ title, route: { params: { userId } } }) {
+  const insets = useSafeAreaInsets()
   const navigation = useNavigation()
   const [secureTextEntry, setSecureTextEntry] = React.useState({
     newPassword: true,
@@ -76,8 +79,12 @@ function SetNewPasswordScreen ({ title, route: { params: { userId } } }) {
   } = useTheme()
   return (
     <TextInputAvoidingView>
-      <View style={[styles.container, { backgroundColor: background }]}>
-        <Text>Set New Password</Text>
+      <ScrollView
+        style={[styles.container, { backgroundColor: background, marginTop: insets.top }]}
+        keyboardShouldPersistTaps={'always'}
+        removeClippedSubviews={false}
+      >
+        <Text style={{ marginTop: 100 }}>Set New Password</Text>
         <TextInput
           style={{ marginTop: 15 }}
           label='new password'
@@ -121,7 +128,7 @@ function SetNewPasswordScreen ({ title, route: { params: { userId } } }) {
           Login
         </Button>
         <StatusBar style='auto' />
-      </View>
+      </ScrollView>
     </TextInputAvoidingView>
   )
 }
@@ -131,7 +138,6 @@ export default SetNewPasswordScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    padding: 8
   }
 })

@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import * as Linking from 'expo-linking'
 import {
   Avatar,
   Paragraph,
@@ -25,42 +26,42 @@ function MyCertificateScreen ({ title }) {
           <Card.Cover source={require('../assets/images/sampletc121.png')} />
           <Card.Actions>
             <Button onPress={() => {}}>Share</Button>
-            <Button onPress={() => {}}>Download</Button>
+            <Button onPress={() => Linking.openURL('https://png.pngtree.com/thumb_back/fh260/back_pic/04/47/51/665858c95c31b60.jpg')}>Download</Button>
           </Card.Actions>
         </Card>
         <Card style={styles.card}>
           <Card.Cover source={require('../assets/images/sampletc121.png')} />
           <Card.Actions>
             <Button onPress={() => {}}>Share</Button>
-            <Button onPress={() => {}}>Download</Button>
+            <Button onPress={() => Linking.openURL('https://png.pngtree.com/thumb_back/fh260/back_pic/04/47/51/665858c95c31b60.jpg')}>Download</Button>
           </Card.Actions>
         </Card>
         <Card style={styles.card}>
           <Card.Cover source={require('../assets/images/sampletc121.png')} />
           <Card.Actions>
             <Button onPress={() => {}}>Share</Button>
-            <Button onPress={() => {}}>Download</Button>
+            <Button onPress={() => Linking.openURL('https://png.pngtree.com/thumb_back/fh260/back_pic/04/47/51/665858c95c31b60.jpg')}>Download</Button>
           </Card.Actions>
         </Card>
         <Card style={styles.card}>
           <Card.Cover source={require('../assets/images/sampletc121.png')} />
           <Card.Actions>
             <Button onPress={() => {}}>Share</Button>
-            <Button onPress={() => {}}>Download</Button>
+            <Button onPress={() => Linking.openURL('https://png.pngtree.com/thumb_back/fh260/back_pic/04/47/51/665858c95c31b60.jpg')}>Download</Button>
           </Card.Actions>
         </Card>
         <Card style={styles.card}>
           <Card.Cover source={require('../assets/images/sampletc121.png')} />
           <Card.Actions>
             <Button onPress={() => {}}>Share</Button>
-            <Button onPress={() => {}}>Download</Button>
+            <Button onPress={() => Linking.openURL('https://png.pngtree.com/thumb_back/fh260/back_pic/04/47/51/665858c95c31b60.jpg')}>Download</Button>
           </Card.Actions>
         </Card>
         <Card style={styles.card}>
           <Card.Cover source={require('../assets/images/sampletc121.png')} />
           <Card.Actions>
             <Button onPress={() => {}}>Share</Button>
-            <Button onPress={() => {}}>Download</Button>
+            <Button onPress={() => Linking.openURL('https://png.pngtree.com/thumb_back/fh260/back_pic/04/47/51/665858c95c31b60.jpg')}>Download</Button>
           </Card.Actions>
         </Card>
         <StatusBar style='auto' />

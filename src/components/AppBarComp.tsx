@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Appbar } from 'react-native-paper'
-import LogoutConfirmationComp from './LogoutConfirmationComp'
+import DialogLogoutConfirmationComp from './DialogLogoutConfirmationComp'
 
 const AppBarComp = ({ title }) => {
   const [logoutDialogVisible, setLogoutDialogVisible] = React.useState(false)
@@ -16,7 +16,7 @@ const AppBarComp = ({ title }) => {
         <Appbar.Content title={title} />
         <Appbar.Action icon='location-exit' onPress={showDialog} />
       </Appbar.Header>
-      <LogoutConfirmationComp visible={logoutDialogVisible} hideDialog={hideDialog} />
+      <DialogLogoutConfirmationComp visible={logoutDialogVisible} hideDialog={hideDialog} />
     </>
   )
 }
