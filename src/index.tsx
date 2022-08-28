@@ -1,3 +1,4 @@
+import React from 'react'
 import { useAtom } from 'jotai'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -9,6 +10,7 @@ import OtpScreen from './screens/OtpScreen'
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen'
 import { loginIdAtom } from './GlobalAtom'
 import SetNewPasswordScreen from './screens/SetNewPasswordScreen'
+import SplashScreen from './screens/SplashScreen'
 
 const Stack = createStackNavigator()
 
@@ -26,7 +28,15 @@ const theme = {
 
 function App () {
   const [loginId] = useAtom(loginIdAtom)
-  console.log('App invoked with loginId:', loginId)
+  const [token, setToken] = React.useState(null)
+  React.useEffect(() => {
+    setToken(loginId)
+  }, [loginId])
+  console.log('App invoked with loginId:', loginId, 'token:', token)
+  if (token === null) {
+    return (<SplashScreen title='splash' />)
+  }
+
   if (loginId === '') {
     return (
       <PaperProvider theme={theme}>
@@ -45,7 +55,7 @@ function App () {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName='BottomNavigationComp' headerMode='none'>
+        <Stack.Navigator initialRouteName='BottomNavigationComp' screenOptions={{ headerShown: false }}>
           <Stack.Screen name='BottomNavigationComp' component={props => <BottomNavigationComp {...props} />} />
         </Stack.Navigator>
       </NavigationContainer>
