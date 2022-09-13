@@ -8,7 +8,11 @@ import TextInputAvoidingView from '../components/TextInputAvoidingViewComp'
 import AppConfig from '../config/AppConfig'
 
 const API_URL = AppConfig.baseUrlApi + '/otp'
-
+/**
+ *
+ * @param param0 screenProps action adalah tujuan dari validasi otp
+ * @returns OtpScreen
+ */
 function OtpScreen ({ title, route: { params: { action, otpRef } } }) {
   const insets = useSafeAreaInsets()
   console.log('action===>', action)
@@ -42,6 +46,28 @@ function OtpScreen ({ title, route: { params: { action, otpRef } } }) {
     } else {
       setError({ ...error, otp: 'invalid otp' })
       setErrorJsonString(JSON.stringify(error))
+    }
+  }
+  const handleResendOtp = async () => {
+    const data = {
+      method: 'POST',
+      // credentials: 'same-origin',
+      // mode: 'same-origin',
+      body: JSON.stringify(payload),
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+        // 'X-CSRFToken':  cookie.load('csrftoken')
+      }
+    }
+    const response = await fetch(API_URL + '/validate/signup', data)
+    const dataResponse = await response.json()
+    if (dataResponse.status === 'ok') {
+      // resend otp success
+      // ToastAndroid.show("A pikachu appeared nearby !", ToastAndroid.SHORT);
+    } else {
+      // resend otp failed
     }
   }
   const handleSubmit = async () => {
@@ -97,6 +123,14 @@ function OtpScreen ({ title, route: { params: { action, otpRef } } }) {
         <HelperText type='error' visible={error.otp !== ''}>
           {error.otp}
         </HelperText>
+        <Button
+          style={{ marginTop: 15 }}
+          icon='reload'
+          mode='text'
+          onPress={handleResendOtp}
+        >
+          Resend OTP
+        </Button>
         <Button
           style={{ marginTop: 15 }}
           icon='send'
